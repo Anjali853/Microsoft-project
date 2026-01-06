@@ -1,0 +1,7 @@
+{
+  "name": "EcoSmart Home - AI Energy Intelligence",
+  "description": "A production-ready smart energy monitoring dashboard that converts raw electricity data into actionable AI-driven insights, helping households reduce consumption by 15-25%.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
