@@ -64,7 +64,7 @@
 
   <!-- React App -->
   <script type="module">
-  import React from "react";
+  import React, { useState, useEffect } from "react";
   import { createRoot } from "react-dom/client";
 
   function StatCard({ title, value, unit }) {
@@ -72,11 +72,7 @@
       "div",
       { className: "glass p-6 rounded-2xl text-center" },
       [
-        React.createElement(
-          "p",
-          { key: 1, className: "text-gray-400 text-sm" },
-          title
-        ),
+        React.createElement("p", { key: 1, className: "text-gray-400 text-sm" }, title),
         React.createElement(
           "h2",
           { key: 2, className: "text-3xl font-bold neon-green mt-2" },
@@ -86,19 +82,56 @@
     );
   }
 
+  // Simple SVG Line Chart (no extra library)
+  function LineChart({ data }) {
+    const max = Math.max(...data);
+    const points = data
+      .map((v, i) => {
+        const x = (i / (data.length - 1)) * 100;
+        const y = 100 - (v / max) * 100;
+        return `${x},${y}`;
+      })
+      .join(" ");
+
+    return React.createElement(
+      "svg",
+      { viewBox: "0 0 100 100", className: "w-full h-40" },
+      React.createElement("polyline", {
+        points,
+        fill: "none",
+        stroke: "#2DFF8E",
+        strokeWidth: "2"
+      })
+    );
+  }
+
   function App() {
+    const [usage, setUsage] = useState(8.4);
+    const [cost, setCost] = useState(1240);
+    const [saved, setSaved] = useState(18);
+    const [history, setHistory] = useState([5, 6, 7, 6.5, 7.2, 8]);
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const next = +(usage + Math.random()).toFixed(1);
+        setUsage(next);
+        setCost((c) => c + Math.floor(Math.random() * 10));
+        setSaved((s) => Math.min(30, s + 1));
+        setHistory((h) => [...h.slice(1), next]);
+      }, 3000);
+
+      return () => clearInterval(interval);
+    }, [usage]);
+
     return React.createElement(
       "div",
       { className: "min-h-screen px-6 py-10 max-w-6xl mx-auto" },
-
       [
-        // Header
         React.createElement(
           "h1",
           {
             key: "h1",
-            className:
-              "text-4xl md:text-6xl font-extrabold neon-green text-center mb-4"
+            className: "text-4xl md:text-6xl font-extrabold neon-green text-center mb-4"
           },
           "EcoSmart Home"
         ),
@@ -107,66 +140,67 @@
           "p",
           {
             key: "p1",
-            className:
-              "text-center text-gray-400 max-w-2xl mx-auto mb-12"
+            className: "text-center text-gray-400 max-w-2xl mx-auto mb-12"
           },
-          "Monitor electricity usage, reduce waste, and get AI-powered energy-saving insights."
+          "Live AI-powered energy monitoring dashboard."
         ),
 
-        // Stats
         React.createElement(
           "div",
           {
             key: "stats",
-            className:
-              "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12"
+            className: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12"
           },
           [
             React.createElement(StatCard, {
               key: 1,
               title: "Today's Usage",
-              value: "8.4",
+              value: usage,
               unit: "kWh"
             }),
             React.createElement(StatCard, {
               key: 2,
               title: "Monthly Cost",
-              value: "₹1240",
+              value: "₹" + cost,
               unit: ""
             }),
             React.createElement(StatCard, {
               key: 3,
               title: "Energy Saved",
-              value: "18%",
+              value: saved + "%",
               unit: ""
             })
+          ]
+        ),
+
+        // Graph Section
+        React.createElement(
+          "div",
+          { key: "graph", className: "glass p-6 rounded-2xl mb-12" },
+          [
+            React.createElement(
+              "h3",
+              { key: 1, className: "text-xl font-semibold neon-blue mb-4" },
+              "📈 Energy Usage Trend"
+            ),
+            React.createElement(LineChart, { key: 2, data: history })
           ]
         ),
 
         // AI Recommendation
         React.createElement(
           "div",
-          {
-            key: "ai",
-            className:
-              "glass p-8 rounded-2xl text-center"
-          },
+          { key: "ai", className: "glass p-8 rounded-2xl text-center" },
           [
             React.createElement(
               "h3",
-              {
-                key: 1,
-                className: "text-2xl font-semibold neon-blue mb-4"
-              },
-              "🤖 AI Recommendation"
+              { key: 1, className: "text-2xl font-semibold neon-blue mb-4" },
+              "🤖 AI Insight (Live)"
             ),
             React.createElement(
               "p",
-              {
-                key: 2,
-                className: "text-gray-300 max-w-xl mx-auto"
-              },
-              "Running your AC at 24°C instead of 20°C can reduce energy usage by up to 16% today."
+              { key: 2, className: "text-gray-300 max-w-xl mx-auto" },
+              "Energy usage trend is rising. Switching off idle appliances can save up to 12% today."
             )
           ]
         )
