@@ -64,49 +64,120 @@
 
   <!-- React App -->
   <script type="module">
-    import React from "react";
-    import { createRoot } from "react-dom/client";
+  import React from "react";
+  import { createRoot } from "react-dom/client";
 
-    function App() {
-      return React.createElement(
-        "div",
-        {
-          className:
-            "min-h-screen flex flex-col items-center justify-center text-center px-6"
-        },
-        [
-          React.createElement(
-            "h1",
-            {
+  function StatCard({ title, value, unit }) {
+    return React.createElement(
+      "div",
+      { className: "glass p-6 rounded-2xl text-center" },
+      [
+        React.createElement(
+          "p",
+          { key: 1, className: "text-gray-400 text-sm" },
+          title
+        ),
+        React.createElement(
+          "h2",
+          { key: 2, className: "text-3xl font-bold neon-green mt-2" },
+          value + " " + unit
+        )
+      ]
+    );
+  }
+
+  function App() {
+    return React.createElement(
+      "div",
+      { className: "min-h-screen px-6 py-10 max-w-6xl mx-auto" },
+
+      [
+        // Header
+        React.createElement(
+          "h1",
+          {
+            key: "h1",
+            className:
+              "text-4xl md:text-6xl font-extrabold neon-green text-center mb-4"
+          },
+          "EcoSmart Home"
+        ),
+
+        React.createElement(
+          "p",
+          {
+            key: "p1",
+            className:
+              "text-center text-gray-400 max-w-2xl mx-auto mb-12"
+          },
+          "Monitor electricity usage, reduce waste, and get AI-powered energy-saving insights."
+        ),
+
+        // Stats
+        React.createElement(
+          "div",
+          {
+            key: "stats",
+            className:
+              "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12"
+          },
+          [
+            React.createElement(StatCard, {
               key: 1,
-              className: "text-4xl md:text-6xl font-extrabold neon-green mb-4"
-            },
-            "EcoSmart Home"
-          ),
-          React.createElement(
-            "p",
-            {
+              title: "Today's Usage",
+              value: "8.4",
+              unit: "kWh"
+            }),
+            React.createElement(StatCard, {
               key: 2,
-              className: "text-lg md:text-xl text-gray-300 max-w-xl"
-            },
-            "AI-powered energy insights to reduce electricity waste and build a sustainable future."
-          ),
-          React.createElement(
-            "button",
-            {
+              title: "Monthly Cost",
+              value: "₹1240",
+              unit: ""
+            }),
+            React.createElement(StatCard, {
               key: 3,
-              className:
-                "mt-8 px-8 py-3 rounded-xl bg-green-400 text-black font-semibold hover:scale-105 transition"
-            },
-            "Get Started"
-          )
-        ]
-      );
-    }
+              title: "Energy Saved",
+              value: "18%",
+              unit: ""
+            })
+          ]
+        ),
 
-    const root = createRoot(document.getElementById("root"));
-    root.render(React.createElement(App));
-  </script>
+        // AI Recommendation
+        React.createElement(
+          "div",
+          {
+            key: "ai",
+            className:
+              "glass p-8 rounded-2xl text-center"
+          },
+          [
+            React.createElement(
+              "h3",
+              {
+                key: 1,
+                className: "text-2xl font-semibold neon-blue mb-4"
+              },
+              "🤖 AI Recommendation"
+            ),
+            React.createElement(
+              "p",
+              {
+                key: 2,
+                className: "text-gray-300 max-w-xl mx-auto"
+              },
+              "Running your AC at 24°C instead of 20°C can reduce energy usage by up to 16% today."
+            )
+          ]
+        )
+      ]
+    );
+  }
+
+  const root = createRoot(document.getElementById("root"));
+  root.render(React.createElement(App));
+</script>
+
 </body>
 </html>
 
